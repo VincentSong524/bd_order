@@ -247,3 +247,55 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// 新增
+
+// 移动端优化
+function setupMobileOptimizations() {
+    // 防止双击缩放
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function (event) {
+        const now = (new Date()).getTime();
+        if (now - lastTouchEnd <= 300) {
+            event.preventDefault();
+        }
+        lastTouchEnd = now;
+    }, false);
+
+    // 改善触摸反馈
+    document.addEventListener('touchstart', function() {}, {passive: true});
+    
+    // 改善按钮点击反馈
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => {
+        button.addEventListener('touchstart', function() {
+            this.style.opacity = '0.8';
+        });
+        
+        button.addEventListener('touchend', function() {
+            this.style.opacity = '1';
+        });
+    });
+}
+
+// 在DOM加载完成后调用
+document.addEventListener('DOMContentLoaded', function() {
+    setupMobileOptimizations();
+    // ... 其他初始化代码
+});
+
+// 添加键盘收起功能
+function setupInputDismiss() {
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            // 在移动端，输入框失去焦点时确保页面布局正确
+            setTimeout(() => {
+                window.scrollTo(0, 0);
+            }, 100);
+        });
+    });
+}
+
+// 调用输入框优化
+setupInputDismiss();
